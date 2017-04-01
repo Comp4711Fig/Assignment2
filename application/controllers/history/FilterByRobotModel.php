@@ -1,18 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Description of History_DateTime
- *
- * @author Steven
- */
-class ByDateTime extends Application {
-    
+class FilterByRobotModel extends Application
+{
     private $items_per_page = 20;
     
     function __construct() 
@@ -31,15 +22,17 @@ class ByDateTime extends Application {
     {
         $role = $this->session->userdata('userrole');
         if ($role != ROLE_BOSS) redirect('/');
-        $this->data['pagetitle'] = 'History Page ('. $role . ')';
-        
-        // order them by datetime
-        usort($historys, "orderByDateTime");
+        $this->data['pagetitle'] = 'History Page ('. $role . ')';    
         
         // and then pass them on
         $this->data['display_historys'] = $historys;
-        $this->data['pagebody'] = 'historys_bydatetime';
+        $this->data['pagebody'] = 'historys';
         $this->render();
+    }
+    
+    function process() {
+        $this->session->set_userdata('filter', implode($this->input->post()));
+        redirect('/history/filterbyrobotmodel/page/1');
     }
     
     // Extract & handle a page of items, defaulting to the beginning
@@ -48,9 +41,15 @@ class ByDateTime extends Application {
         $role = $this->session->userdata('userrole');
         if ($role != ROLE_BOSS) redirect('/');
         $this->data['pagetitle'] = 'History Page ('. $role . ')';
+
+        $records = $this->historys->all();
+        $historys = array();
         
-        $records = $this->historys->all(); // get all the tasks
-        $historys = array(); // start with an empty extract
+        $filter = $this->session->userdata('filter');
+        echo $filter;
+        
+        //$records = $this->historys->all(); // get all the tasks
+        //$historys = array(); // start with an empty extract
 
         // use a foreach loop, because the record indices may not be sequential
         $index = 0; // where are we in the tasks list
@@ -58,8 +57,14 @@ class ByDateTime extends Application {
         $start = ($num - 1) * $this->items_per_page;
         foreach($records as $history) {
             if ($index++ >= $start) {
-                $historys[] = $history;
-                $count++;
+                
+                if (!strcmp($history->model, $filter)) {
+                    $historys[] = $history;
+                    $count++;
+                }
+                
+                //$historys[] = $history;
+                //$count++;
             }
             if ($count >= $this->items_per_page) break;
         }
@@ -77,17 +82,9 @@ class ByDateTime extends Application {
             'next' => min($num+1,$lastpage),
             'last' => $lastpage
         );
-        return $this->parser->parse('itemnav_bydatetime',$parms,true);
+        return $this->parser->parse('itemnav_filterbyrobotmodel',$parms,true);
     }
+
 }
 
-// return -1, 0, or 1 of $a's datetime is earlier, equal to, or later than $b's
-function orderByDateTime($a, $b)
-{
-    if ($a->stamp < $b->stamp)
-        return -1;
-    elseif ($a->stamp > $b->stamp)
-        return 1;
-    else
-        return 0;
-}
+

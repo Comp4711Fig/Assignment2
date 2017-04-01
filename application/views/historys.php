@@ -1,7 +1,7 @@
 
-<a href="/history/bydatetime/page/1"><input type="button" value="Order by datetime"/></a>
-<a href="/history/byrobotmodel/page/1"><input type="button" value="Order by robot model"/></a>
-<a href="/history/welcome/filterbyrobotline"><input type="button" value="filter robot series"/></a>
+<a href="/history/orderbydatetime/page/1"><input type="button" value="Order by datetime"/></a>
+<a href="/history/orderbyrobotmodel/page/1"><input type="button" value="Order by robot model"/></a>
+<a href="/history/welcome/filterbyrobotline"><input type="button" value="filter by robot line"/></a>
 <a href="/history/welcome/filterbyrobotmodel"><input type="button" value="filter by robot model"/></a>
 {pagination}
 <table class="table">
