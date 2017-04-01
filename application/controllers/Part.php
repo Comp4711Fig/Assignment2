@@ -40,7 +40,7 @@ class Part extends Application {
     }
     
     public function buildparts() {
-        $parts = file_get_contents('https://umbrella.jlparry.com/work/mybuilds?key=434541');
+        $parts = file_get_contents('https://umbrella.jlparry.com/work/mybuilds?key=422a8f');
         $parts = json_decode($parts, true);   
         
         foreach ($parts as $part) {
@@ -67,7 +67,7 @@ class Part extends Application {
     }
 
     public function buyparts() {
-        $parts = file_get_contents('https://umbrella.jlparry.com/work/buybox?key=434541');
+        $parts = file_get_contents('https://umbrella.jlparry.com/work/buybox?key=422a8f');
         $parts = json_decode($parts, true);   
         
         foreach ($parts as $part) {
