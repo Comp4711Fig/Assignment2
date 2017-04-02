@@ -10,7 +10,7 @@
 
 DROP TABLE IF EXISTS `Robot`;
 CREATE TABLE `Robot` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `part1CA` varchar(6) NOT NULL,
   `part2CA` varchar(6) NOT NULL,
   `part3CA` varchar(6) NOT NULL,
@@ -19,10 +19,5 @@ CREATE TABLE `Robot` (
   `status` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE `Robot`
-  ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `Robot`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
-INSERT into robot(part1CA, part2CA, part3CA) VALUES ("111111","555555","666666")
+INSERT into Robot(part1CA, part2CA, part3CA) VALUES ("111111","555555","666666")
