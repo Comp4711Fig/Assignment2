@@ -69,7 +69,7 @@ class Part extends Application {
             $this->parts->add($part);
             
             $history = array('seq' => $part->id, 'plant' => $part->plant, 'action' => 'build', 
-                'quantity' => 1, 'amount' => 50, 'stamp' => $part->stamp, 'model' => $part->model, 
+                'quantity' => 1, 'amount' => 10, 'stamp' => $part->stamp, 'model' => $part->model, 
                 'line' => $part->line);
             $history = (object) $history;  // convert back to object
             $this->historys->add($history);
@@ -83,10 +83,20 @@ class Part extends Application {
         
         $sessions = $this->local_session->all();
 
-        $apikey = '';
-        // loop over the post fields, looking for flagged parts
+        $local_session = array();
+        // loop over the post fields, looking for flagged tasks
         foreach($sessions as $session) {
             $apikey = $session->apikey;
+            
+            $local_session['plant'] = $session->plant;
+            $local_session['token'] = $session->token;
+            $local_session['apikey'] = $session->apikey;
+            // each purchase spends 100 bucks
+            $local_session['spent'] = $session->spent + 100;
+            $local_session['earned'] = $session->earned;
+
+            $local_session = (object) $local_session;
+            $this->local_session->update($local_session);
         }
 
         $parts = file_get_contents('https://umbrella.jlparry.com/work/mybuilds?key=' . $apikey);
@@ -106,7 +116,7 @@ class Part extends Application {
             $this->parts->add($part);
             
             $history = array('seq' => $part->id, 'plant' => $part->plant, 'action' => 'buy', 
-                'quantity' => 1, 'amount' => 50, 'stamp' => $part->stamp, 'model' => $part->model, 
+                'quantity' => 1, 'amount' => 10, 'stamp' => $part->stamp, 'model' => $part->model, 
                 'line' => $part->line);
             $history = (object) $history;  // convert back to object
             $this->historys->add($history);

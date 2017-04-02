@@ -13,10 +13,14 @@ class Welcome extends Application {
         $parts = sizeof($this->parts->all()); // get all the parts
         //Total # assembled bots
         $robots = sizeof($this->robots->all());
-        //Total spent
-        $spent = 0;
-        //Total earned
-        $earned = 0;
+
+        //Total spent and earned
+        $sessions = $this->local_session->all();
+        foreach($sessions as $session) {
+            $spent = $session->spent;
+            $earned = $session->earned;
+        }
+
         //replace the view with the content  (value =parts,robots, spent and earned)
         //total number of parts
         $this->data['numParts'] = $parts;
@@ -29,5 +33,4 @@ class Welcome extends Application {
         $this->data['pagebody'] = 'homepage';
         $this->render();
     }
-
 }
