@@ -17,7 +17,7 @@ class OrderByDateTime extends Application {
         $this->show_page($historys);
     }
     
-    // Show a single page of todo items
+    // Show a single page of history items
     private function show_page($historys)
     {
         $role = $this->session->userdata('userrole');
@@ -40,11 +40,11 @@ class OrderByDateTime extends Application {
         if ($role != ROLE_BOSS) redirect('/');
         $this->data['pagetitle'] = 'History Page ('. $role . ')';
         
-        $records = $this->historys->all(); // get all the tasks
+        $records = $this->historys->all(); // get all the historys
         $historys = array(); // start with an empty extract
 
         // use a foreach loop, because the record indices may not be sequential
-        $index = 0; // where are we in the tasks list
+        $index = 0; // where are we in the historys list
         $count = 0; // how many items have we added to the extract
         $start = ($num - 1) * $this->items_per_page;
         foreach($records as $history) {

@@ -15,18 +15,20 @@ class Manage extends Application {
         $this->render();
     }
 
+    // handles reboot button
     public function reboot() {
 
         $sessions = $this->local_session->all();
 
+        // determines current session
         $apikey = '';
-        // loop over the post fields, looking for flagged tasks
         foreach ($sessions as $session) {
             $apikey = $session->apikey;
         }
 
         $message = file_get_contents('https://umbrella.jlparry.com/work/rebootme?key=' . $apikey);
 
+        // clears parts and historys table
         if (!strcmp($message, "Ok")) {
             $parts = $this->parts->all();
             foreach ($parts as $part) {
@@ -44,6 +46,7 @@ class Manage extends Application {
         $this->index();
     }
 
+    // handles register button
     public function register() {
 
         $role = $this->session->userdata('userrole');
@@ -68,6 +71,7 @@ class Manage extends Application {
         $apikey = file_get_contents('https://umbrella.jlparry.com/work/registerme/fig/' . $session->token);
         $session->apikey = substr($apikey, 3, 6);
 
+        // registers session
         $this->local_session->add($session);
 
         $this->alert($apikey, 'success');

@@ -17,7 +17,7 @@ class FilterByRobotLine extends Application
         $this->show_page($historys);
     }
     
-    // Show a single page of todo items
+    // Show a single page of history items
     private function show_page($historys)
     {
         $role = $this->session->userdata('userrole');
@@ -30,6 +30,7 @@ class FilterByRobotLine extends Application
         $this->render();
     }
     
+    // processes filter by robot line
     function process() {
         $this->session->set_userdata('filter', implode($this->input->post()));
         redirect('/history/filterbyrobotline/page/1');
@@ -47,23 +48,18 @@ class FilterByRobotLine extends Application
         
         $filter = $this->session->userdata('filter');
         
-        //$records = $this->historys->all(); // get all the tasks
-        //$historys = array(); // start with an empty extract
-
         // use a foreach loop, because the record indices may not be sequential
-        $index = 0; // where are we in the tasks list
+        $index = 0; // where are we in the historys list
         $count = 0; // how many items have we added to the extract
         $start = ($num - 1) * $this->items_per_page;
         foreach($records as $history) {
             if ($index++ >= $start) {
                 
+                // filter by robot line
                 if (!strcmp($history->line, $filter)) {
                     $historys[] = $history;
                     $count++;
                 }
-                
-                //$historys[] = $history;
-                //$count++;
             }
             if ($count >= $this->items_per_page) break;
         }
