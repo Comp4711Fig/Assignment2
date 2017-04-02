@@ -7,10 +7,29 @@ class Manage extends Application {
     public function index() {
 
         $role = $this->session->userdata('userrole');
-        if ($role != ROLE_BOSS)
-            redirect('/');
+        if ($role != ROLE_BOSS) redirect('/');
 
-        $this->data['pagetitle'] = 'Manage Page (' . $role . ')';
+        $this->data['pagetitle'] = 'Manage Page ('. $role . ')';
+        
+        $robots = $this->robots->all(); // get all the robots
+
+        // build the part presentation output
+        $result = '';   // start with an empty array        
+        foreach ($robots as $robot) {
+            $result .= $this->parser->parse('onerobot',(array)$robot,true);
+        }
+        // and then pass them on
+        $this->data['display_robots'] = $result;
+        
+        
+        // form to sell robot
+        $fields = array(
+            'frobot' => makeTextField('Enter robot id','robot', '', '', "Sell robot"),
+            'zsubmit' => makeSubmitButton('Sell Robot', "Sell Robot", 'btn-success'),
+        );
+        $this->data = array_merge($this->data, $fields);
+        
+        
         $this->data['pagebody'] = 'manage';
         $this->render();
     }
@@ -79,4 +98,33 @@ class Manage extends Application {
         $this->index();
     }
 
+    // sells robot to PRC
+    public function sellrobot() {
+        
+        $robotid = $this->input->post();
+        
+        // convert from array to string
+        $robotid = implode($robotid);
+        
+        $robot = $this->robots->get($robotid);
+
+        // ask umbrella server to buy robot
+        $sessions = $this->local_session->all();
+        $apikey = '';
+        foreach($sessions as $session) {
+            $apikey = $session->apikey;
+        }
+        $message = file_get_contents('https://umbrella.jlparry.com/work/buymybot/' .
+                $robot->part1CA . '/' . $robot->part2CA . '/' . $robot->part3CA . '?key=' . $apikey); 
+
+        // removes from robots table
+        if (!strcmp($message, "Ok")) {
+            // delete robot from database
+            $this->robots->delete($robotid);
+        }
+
+        $this->alert($message, 'success');
+        
+        $this->index();
+    }
 }
