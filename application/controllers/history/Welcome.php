@@ -22,7 +22,7 @@ class Welcome extends Application {
 
     // Show a single page of todo items
     private function show_page($historys) {
-        // convert the array of task objects into an array of associative objects
+        // convert the array of history objects into an array of associative objects
         $display_historys = array();  
         foreach ($historys as $history) {
             $display_historys[] = (array) $history;
@@ -41,10 +41,10 @@ class Welcome extends Application {
             redirect('/');
         $this->data['pagetitle'] = 'History Page (' . $role . ')';
 
-        $records = $this->historys->all(); // get all the tasks
+        $records = $this->historys->all(); // get all the historys
         $historys = array(); // start with an empty extract
         // use a foreach loop, because the record indices may not be sequential
-        $index = 0; // where are we in the tasks list
+        $index = 0; // where are we in the historys list
         $count = 0; // how many items have we added to the extract
         $start = ($num - 1) * $this->items_per_page;
         foreach ($records as $history) {
@@ -72,6 +72,7 @@ class Welcome extends Application {
         return $this->parser->parse('itemnav', $parms, true);
     }
 
+    // handles filter by robot model
     public function filterbyrobotmodel() {    
         
         $fields = array(
@@ -84,6 +85,7 @@ class Welcome extends Application {
         $this->render();
     }
     
+    // handles filter by robot line
     public function filterbyrobotline() {    
         
         $fields = array(

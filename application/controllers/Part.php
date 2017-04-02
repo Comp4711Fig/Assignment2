@@ -24,6 +24,7 @@ class Part extends Application {
         $this->render();
     }
     
+    // get values for selected part
     public function getpart($id){
         $this->data['pagebody'] = 'singlepart';	
         $role = $this->session->userdata('userrole');
@@ -39,12 +40,13 @@ class Part extends Application {
         $this->render();
     }
     
+    // handles build parts button
     public function buildparts() {
         
         $sessions = $this->local_session->all();
 
         $apikey = '';
-        // loop over the post fields, looking for flagged tasks
+        // loop over the post fields, looking for flagged parts
         foreach($sessions as $session) {
             $apikey = $session->apikey;
         }
@@ -52,6 +54,7 @@ class Part extends Application {
         $parts = file_get_contents('https://umbrella.jlparry.com/work/mybuilds?key=' . $apikey);
         $parts = json_decode($parts, true);   
         
+        // determine line from model of part, then update parts and historys table
         foreach ($parts as $part) {
             $part = (object) $part;  // convert back to object
             if ($part->model >= 'a' && $part->model <= 'l') {
@@ -75,12 +78,13 @@ class Part extends Application {
         redirect('/part');
     }
 
+    // handles buy parts button
     public function buyparts() {
         
         $sessions = $this->local_session->all();
 
         $apikey = '';
-        // loop over the post fields, looking for flagged tasks
+        // loop over the post fields, looking for flagged parts
         foreach($sessions as $session) {
             $apikey = $session->apikey;
         }
