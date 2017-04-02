@@ -21,9 +21,9 @@ class Welcome extends Application {
     }
 
     // Show a single page of todo items
-    private function show_page($historys) {
-        // convert the array of task objects into an array of associative objects       
-        $display_historys = array();
+    private function show_page($historys) 
+        // convert the array of task objects into an array of associative objects
+        $display_historys=array();  
         foreach ($historys as $history) {
             $display_historys[] = (array) $history;
         }
@@ -75,83 +75,25 @@ class Welcome extends Application {
     public function filterbyrobotmodel() {    
         
         $fields = array(
-            'fhistory' => makeTextField('Enter rebot model','history', '', 'Work', "What needs to ve done?"),
-            'zsubmit' => makeSubmitButton('Filter', "Steven is angel", 'btn-success'),
+            'fhistory' => makeTextField('Enter robot model','history', '', '', "Filter by robot model"),
+            'zsubmit' => makeSubmitButton('Filter', "Filter by robot model", 'btn-success'),
         );
         $this->data = array_merge($this->data, $fields);
         
-        $this->data['pagebody'] = 'filterbymodel';
+        $this->data['pagebody'] = 'filterbyrobotmodel';
         $this->render();
     }
     
     public function filterbyrobotline() {    
         
         $fields = array(
-            'fhistory' => makeTextField('Enter rebot line','history', '', 'Work', "What needs to ve done?"),
-            'zsubmit' => makeSubmitButton('Filter', "Steven is angel", 'btn-success'),
+            'fhistory' => makeTextField('Enter robot line','history', '', '', "Filter by robot line"),
+            'zsubmit' => makeSubmitButton('Filter', "Filter by robot line", 'btn-success'),
         );
         $this->data = array_merge($this->data, $fields);
         
-        $this->data['pagebody'] = 'filterbyline';
+        $this->data['pagebody'] = 'filterbyrobotline';
         $this->render();
     }
-    
-    // handle form submission
-    public function submit()
-    {
-        $filter = $this->input->post();
-        
-        $role = $this->session->userdata('userrole');
-        $this->data['pagetitle'] = 'History Page ('. $role . ')';
-        
-        $historys = $this->historys->all();
-        $filtered = array();
-        
-        // loop over the post fields, looking for flagged tasks
-        foreach($historys as $history) {
-            if (!strcmp($history->model, implode($filter))) {
-                $filtered[] = $history;
-            }
-            /*if ($history->model == $filter) {
-                $filtered[] = $history;
-            }*/
-        }
 
-        // and then pass them on
-        $this->data['display_historys'] = $filtered;
-        $this->data['pagebody'] = 'historys_filtered';
-        $this->render();
-        
-        //$this->index();
-        //$this->index();
-    }
-    
-    public function submit2()
-    {
-        $filter = $this->input->post();
-        
-        $role = $this->session->userdata('userrole');
-        $this->data['pagetitle'] = 'History Page ('. $role . ')';
-        
-        $historys = $this->historys->all();
-        $filtered = array();
-        
-        // loop over the post fields, looking for flagged tasks
-        foreach($historys as $history) {
-            if (!strcmp($history->line, implode($filter))) {
-                $filtered[] = $history;
-            }
-            /*if ($history->model == $filter) {
-                $filtered[] = $history;
-            }*/
-        }
-
-        // and then pass them on
-        $this->data['display_historys'] = $filtered;
-        $this->data['pagebody'] = 'historys_filtered';
-        $this->render();
-        
-        //$this->index();
-        //$this->index();
-    }
 }

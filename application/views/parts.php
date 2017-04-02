@@ -4,7 +4,6 @@
 
 <table class="table">
     <tr>
-        <th>Part ID</th>
         <th>Part Code</th> 
         <th>CA Code</th>
         <th>Plant</th>
