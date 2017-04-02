@@ -39,24 +39,38 @@ class Manage extends Application {
 
         $sessions = $this->local_session->all();
 
-        // determines current session
         $apikey = '';
-        foreach ($sessions as $session) {
+        $local_session = array();
+        
+        // reset spent and earned
+        foreach($sessions as $session) {
             $apikey = $session->apikey;
-        }
+            
+            $local_session['plant'] = $session->plant;
+            $local_session['token'] = $session->token;
+            $local_session['apikey'] = $session->apikey;
+            $local_session['spent'] = 0;
+            $local_session['earned'] = 0;
 
+            $local_session = (object) $local_session;
+            $this->local_session->update($local_session);
+        }
+        
         $message = file_get_contents('https://umbrella.jlparry.com/work/rebootme?key=' . $apikey);
 
-        // clears parts and historys table
+        // clears parts, historys, and robots table
         if (!strcmp($message, "Ok")) {
             $parts = $this->parts->all();
             foreach ($parts as $part) {
                 $this->parts->delete($part->id);
             }
-
             $historys = $this->historys->all();
             foreach ($historys as $history) {
                 $this->historys->delete($history->seq);
+            }
+            $robots = $this->robots->all();
+            foreach ($robots as $robot) {
+                $this->robots->delete($robot->id);
             }
         }
 
@@ -108,17 +122,36 @@ class Manage extends Application {
         
         $robot = $this->robots->get($robotid);
 
-        // ask umbrella server to buy robot
+        
         $sessions = $this->local_session->all();
+
+        $local_session = array();
         $apikey = '';
         foreach($sessions as $session) {
             $apikey = $session->apikey;
         }
+
         $message = file_get_contents('https://umbrella.jlparry.com/work/buymybot/' .
                 $robot->part1CA . '/' . $robot->part2CA . '/' . $robot->part3CA . '?key=' . $apikey); 
 
         // removes from robots table
         if (!strcmp($message, "Ok")) {
+            
+            // sell robot
+            foreach($sessions as $session) {
+                $apikey = $session->apikey;
+
+                $local_session['plant'] = $session->plant;
+                $local_session['token'] = $session->token;
+                $local_session['apikey'] = $session->apikey;
+                $local_session['spent'] = $session->spent;
+                // each robot worth 50 bucks
+                $local_session['earned'] = $session->earned + 50;;
+
+                $local_session = (object) $local_session;
+                $this->local_session->update($local_session);
+            }
+
             // delete robot from database
             $this->robots->delete($robotid);
         }
