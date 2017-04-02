@@ -116,7 +116,7 @@ class Assembly extends Application
                           }
                           unset($pieceIds[$key]);
                     }else{
-                            $error_msgs[] = "You must choose only one part from each category to assembly a robot!";
+                            $error_msgs[] = "You must choose only one part from each category to assembly!";
                             break;
                     }
                  }
@@ -130,13 +130,13 @@ class Assembly extends Application
                 $robot->timestamp = date('Y-m-d H:i:s',time());
                 $robot->status = 1;
                 $this->robots->add($robot);
-                
-              $this->alert('Assembly a robot Successful!');
+                $this->alert('Assembly a robot Successful!');
             }else{
                 $this->alert('<strong>Validation errors!<strong><br>'.$error_msgs[0], 'danger');
-            }
-            //if click return button
-         } else if(isset($_POST['return'])){
+            }    
+         } 
+        //if click return button
+         else if(isset($_POST['return'])){
             $url = "http://umbrella.jlparry.com/work/recycle";
             $partsUrl = "";
            
@@ -163,9 +163,8 @@ class Assembly extends Application
                $this->parts->delete($partId);   
                $this->alert('Return Parts Successful!');
         }
-        
-        $this->index();
     }
+     $this->index();
     }
 }
     

@@ -1,4 +1,5 @@
 <div class="twoBtn">
     <input type="submit" name="assembly"  id ="assemblyBtn" value="Assembly"/>
-    <input type="submit" name="return" id = "returnBtn" value="Return to Head Office"/>
+    <!---if click return button it will delete the part from part table-->
+    <input type="submit" name="return" id = "returnBtn" value="Return"/>
 </div>
