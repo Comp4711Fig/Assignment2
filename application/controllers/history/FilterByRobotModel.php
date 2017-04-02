@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class ByRobotModel extends Application
+class FilterByRobotModel extends Application
 {
     private $items_per_page = 20;
     
@@ -17,20 +17,23 @@ class ByRobotModel extends Application
         $this->show_page($historys);
     }
     
-    // Show a single page of todo items
+    // Show a single page of history items
     private function show_page($historys)
     {
         $role = $this->session->userdata('userrole');
         if ($role != ROLE_BOSS) redirect('/');
         $this->data['pagetitle'] = 'History Page ('. $role . ')';    
         
-        // order them by robot model
-        usort($historys, "orderByModel");
-
         // and then pass them on
         $this->data['display_historys'] = $historys;
-        $this->data['pagebody'] = 'historys_bymodel';
+        $this->data['pagebody'] = 'historys';
         $this->render();
+    }
+    
+    // processes filter by robot model
+    function process() {
+        $this->session->set_userdata('filter', implode($this->input->post()));
+        redirect('/history/filterbyrobotmodel/page/1');
     }
     
     // Extract & handle a page of items, defaulting to the beginning
@@ -39,18 +42,25 @@ class ByRobotModel extends Application
         $role = $this->session->userdata('userrole');
         if ($role != ROLE_BOSS) redirect('/');
         $this->data['pagetitle'] = 'History Page ('. $role . ')';
+
+        $records = $this->historys->all();
+        $historys = array();
         
-        $records = $this->historys->all(); // get all the tasks
-        $historys = array(); // start with an empty extract
+        $filter = $this->session->userdata('filter');
+        echo $filter;
 
         // use a foreach loop, because the record indices may not be sequential
-        $index = 0; // where are we in the tasks list
+        $index = 0; // where are we in the historys list
         $count = 0; // how many items have we added to the extract
         $start = ($num - 1) * $this->items_per_page;
         foreach($records as $history) {
             if ($index++ >= $start) {
-                $historys[] = $history;
-                $count++;
+                
+                // filter by robot model
+                if (!strcmp($history->model, $filter)) {
+                    $historys[] = $history;
+                    $count++;
+                }
             }
             if ($count >= $this->items_per_page) break;
         }
@@ -68,48 +78,9 @@ class ByRobotModel extends Application
             'next' => min($num+1,$lastpage),
             'last' => $lastpage
         );
-        return $this->parser->parse('itemnav_bymodel',$parms,true);
+        return $this->parser->parse('itemnav_filterbyrobotmodel',$parms,true);
     }
-    
 
-    
-    public function byDateTime()
-    {
-        $this->data['pagetitle'] = 'History Page - By datetime';
-        $display_historys = $this->historys->all(); // get all history
-
-        // order them by datetime
-        usort($display_historys, "orderByDateTime");
-        
-        // and then pass them on
-        $this->data['display_historys'] = $display_historys;
-        $this->data['pagebody'] = 'historys_bydatetime';
-        $this->render();
-    }
-    
-    public function byModel()
-    {
-        $this->data['pagetitle'] = 'History Page - By model';
-        $display_historys = $this->historys->all(); // get all history
-
-        // order them by datetime
-        usort($display_historys, "orderByModel");
-       
-        // and then pass them on
-        $this->data['display_historys'] = $display_historys;
-        $this->data['pagebody'] = 'historys_bymodel';
-        $this->render();
-    }
 }
 
 
-// return -1, 0, or 1 of $a's robot model is earlier, equal to, or later than $b's
-function orderByModel($a, $b)
-{
-    if ($a->model < $b->model)
-        return -1;
-    elseif ($a->model > $b->model)
-        return 1;
-    else
-        return 0;
-}

@@ -1,26 +1,27 @@
 
 DROP TABLE IF EXISTS `parts`;
 CREATE TABLE `parts` (
-  `id` varchar(10) NOT NULL,
+  `id` varchar(8) NOT NULL,
   `model` char(1) NOT NULL,
   `piece` int(1) NOT NULL,
   `plant` varchar(20) NOT NULL,
-  `stamp` datetime NOT NULL
+  `stamp` datetime NOT NULL,
+  `line` varchar(20) NOT NULL
 );
 
 
-INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`) VALUES
-('111111', 'a', 1, 'plant1', '2010-01-01');
-INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`) VALUES
-('222222', 'b', 2, 'plant2', '2011-01-01');
-INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`) VALUES
-('333333', 'c', 3, 'plant3', '2012-01-01');
-INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`) VALUES
-('444444', 'm', 1, 'plant4', '2013-01-01');
-INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`) VALUES
-('555555', 'r', 2, 'plant5', '2014-01-01');
-INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`) VALUES
-('666666', 'w', 3, 'plant6', '2015-01-01');
+INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`, `line`) VALUES
+('111111', 'a', 1, 'plant1', '2010-01-01', 'household');
+INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`, `line`) VALUES
+('222222', 'b', 2, 'plant2', '2011-01-01', 'household');
+INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`, `line`) VALUES
+('333333', 'c', 3, 'plant3', '2012-01-01', 'household');
+INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`, `line`) VALUES
+('444444', 'm', 1, 'plant4', '2013-01-01', 'butler');
+INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`, `line`) VALUES
+('555555', 'r', 2, 'plant5', '2014-01-01', 'butler');
+INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`, `line`) VALUES
+('666666', 'w', 3, 'plant6', '2015-01-01', 'companion');
 
 
 
