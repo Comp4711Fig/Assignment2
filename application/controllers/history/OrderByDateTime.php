@@ -2,8 +2,8 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class ByRobotModel extends Application
-{
+class OrderByDateTime extends Application {
+    
     private $items_per_page = 20;
     
     function __construct() 
@@ -22,14 +22,14 @@ class ByRobotModel extends Application
     {
         $role = $this->session->userdata('userrole');
         if ($role != ROLE_BOSS) redirect('/');
-        $this->data['pagetitle'] = 'History Page ('. $role . ')';    
+        $this->data['pagetitle'] = 'History Page ('. $role . ')';
         
-        // order them by robot model
-        usort($historys, "orderByModel");
+        // order them by datetime
+        usort($historys, "orderByDateTime");
 
         // and then pass them on
         $this->data['display_historys'] = $historys;
-        $this->data['pagebody'] = 'historys_bymodel';
+        $this->data['pagebody'] = 'historys';
         $this->render();
     }
     
@@ -68,47 +68,16 @@ class ByRobotModel extends Application
             'next' => min($num+1,$lastpage),
             'last' => $lastpage
         );
-        return $this->parser->parse('itemnav_bymodel',$parms,true);
-    }
-    
-
-    
-    public function byDateTime()
-    {
-        $this->data['pagetitle'] = 'History Page - By datetime';
-        $display_historys = $this->historys->all(); // get all history
-
-        // order them by datetime
-        usort($display_historys, "orderByDateTime");
-        
-        // and then pass them on
-        $this->data['display_historys'] = $display_historys;
-        $this->data['pagebody'] = 'historys_bydatetime';
-        $this->render();
-    }
-    
-    public function byModel()
-    {
-        $this->data['pagetitle'] = 'History Page - By model';
-        $display_historys = $this->historys->all(); // get all history
-
-        // order them by datetime
-        usort($display_historys, "orderByModel");
-       
-        // and then pass them on
-        $this->data['display_historys'] = $display_historys;
-        $this->data['pagebody'] = 'historys_bymodel';
-        $this->render();
+        return $this->parser->parse('itemnav_orderbydatetime',$parms,true);
     }
 }
 
-
-// return -1, 0, or 1 of $a's robot model is earlier, equal to, or later than $b's
-function orderByModel($a, $b)
+// return -1, 0, or 1 of $a's datetime is earlier, equal to, or later than $b's
+function orderByDateTime($a, $b)
 {
-    if ($a->model < $b->model)
+    if ($a->stamp < $b->stamp)
         return -1;
-    elseif ($a->model > $b->model)
+    elseif ($a->stamp > $b->stamp)
         return 1;
     else
         return 0;
