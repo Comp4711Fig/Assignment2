@@ -21,7 +21,7 @@ class Welcome extends Application {
     }
 
     // Show a single page of todo items
-    private function show_page($historys) 
+    private function show_page($historys) {
         // convert the array of task objects into an array of associative objects
         $display_historys=array();  
         foreach ($historys as $history) {
