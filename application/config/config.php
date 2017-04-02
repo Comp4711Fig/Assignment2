@@ -8,6 +8,7 @@ $config['menu_choices'] = array(
         array('name' => 'Parts', 'link' => '/part'),
         array('name' => 'Assembly', 'link' => '/assembly'),
         array('name' => 'History', 'link' => '/history/welcome/page/1'),
+        array('name' => 'Manage', 'link' => '/manage'),
         array('name' => 'About Us', 'link' => '/aboutus'),
         )
     );

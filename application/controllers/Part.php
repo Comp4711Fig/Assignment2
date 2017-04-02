@@ -1,5 +1,7 @@
 <?php
 
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Part extends Application {
 
     public function index() {
@@ -31,8 +33,6 @@ class Part extends Application {
         $this->data['id'] = $source->id;
         $this->data['model'] = $source->model;
         $this->data['piece'] = $source->piece;
-        //$this->data['partCode'] = $source->partCode;
-        //$this->data['caCode'] = $source->caCode;
         $this->data['plant'] = $source->plant;
         $this->data['stamp'] = $source->stamp;
         
@@ -40,25 +40,34 @@ class Part extends Application {
     }
     
     public function buildparts() {
-        $parts = file_get_contents('https://umbrella.jlparry.com/work/mybuilds?key=434541');
+        
+        $sessions = $this->local_session->all();
+
+        $apikey = '';
+        // loop over the post fields, looking for flagged tasks
+        foreach($sessions as $session) {
+            $apikey = $session->apikey;
+        }
+
+        $parts = file_get_contents('https://umbrella.jlparry.com/work/mybuilds?key=' . $apikey);
         $parts = json_decode($parts, true);   
         
         foreach ($parts as $part) {
             $part = (object) $part;  // convert back to object
-            $this->parts->add($part);
-            
             if ($part->model >= 'a' && $part->model <= 'l') {
-                $robotLine = 'household';
+                $part->line = 'household';
             }
             else if ($part->model >= 'm' && $part->model <= 'v') {
-                $robotLine = 'butler';
+                $part->line = 'butler';
             }
             else if ($part->model >= 'w' && $part->model <= 'z') {
-                $robotLine = 'companion';
+                $part->line = 'companion';
             }
+            $this->parts->add($part);
             
             $history = array('seq' => $part->id, 'plant' => $part->plant, 'action' => 'build', 
-                'quantity' => 1, 'amount' => 50, 'stamp' => $part->stamp, 'model' => $part->model, 'line' => $robotLine);
+                'quantity' => 1, 'amount' => 50, 'stamp' => $part->stamp, 'model' => $part->model, 
+                'line' => $part->line);
             $history = (object) $history;  // convert back to object
             $this->historys->add($history);
         }
@@ -67,25 +76,34 @@ class Part extends Application {
     }
 
     public function buyparts() {
-        $parts = file_get_contents('https://umbrella.jlparry.com/work/buybox?key=434541');
+        
+        $sessions = $this->local_session->all();
+
+        $apikey = '';
+        // loop over the post fields, looking for flagged tasks
+        foreach($sessions as $session) {
+            $apikey = $session->apikey;
+        }
+
+        $parts = file_get_contents('https://umbrella.jlparry.com/work/mybuilds?key=' . $apikey);
         $parts = json_decode($parts, true);   
         
         foreach ($parts as $part) {
             $part = (object) $part;  // convert back to object
-            $this->parts->add($part);
-            
             if ($part->model >= 'a' && $part->model <= 'l') {
-                $robotLine = 'household';
+                $part->line = 'household';
             }
             else if ($part->model >= 'm' && $part->model <= 'v') {
-                $robotLine = 'butler';
+                $part->line = 'butler';
             }
             else if ($part->model >= 'w' && $part->model <= 'z') {
-                $robotLine = 'companion';
+                $part->line = 'companion';
             }
+            $this->parts->add($part);
             
-            $history = array('seq' => $part->id, 'plant' => $part->plant, 'action' => 'build', 
-                'quantity' => 1, 'amount' => 50, 'stamp' => $part->stamp, 'model' => $part->model, 'line' => $robotLine);
+            $history = array('seq' => $part->id, 'plant' => $part->plant, 'action' => 'buy', 
+                'quantity' => 1, 'amount' => 50, 'stamp' => $part->stamp, 'model' => $part->model, 
+                'line' => $part->line);
             $history = (object) $history;  // convert back to object
             $this->historys->add($history);
         }

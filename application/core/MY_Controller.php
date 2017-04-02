@@ -52,5 +52,6 @@ class Application extends CI_Controller {
         $this->data['alerts'] .= $this->parser->parse('_alert', $parms, true);
         $this->error_free = FALSE;
     }
+  
 
 }
