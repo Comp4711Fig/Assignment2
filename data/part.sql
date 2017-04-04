@@ -26,6 +26,7 @@ INSERT INTO `parts` (`id`, `model`, `piece`, `plant`, `stamp`, `line`) VALUES
 
 
 
+
 /*DROP TABLE IF EXISTS `parts`;
 CREATE TABLE `parts` (
   `id` int(3) NOT NULL AUTO_INCREMENT,
